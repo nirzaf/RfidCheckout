@@ -6,6 +6,7 @@ using RfidCheckout.Messages;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using static System.Console;
 
 namespace RfidCheckout.TagReader
 {
@@ -13,11 +14,10 @@ namespace RfidCheckout.TagReader
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Tag Reader Console");
+            WriteLine("Tag Reader Console");
 
             QueueClient queueClient = new(AccountDetails.ConnectionString, AccountDetails.QueueName);
-
-
+            
             // Create a sample order
             RfidTag[] orderItems = {
                     new() { Product = "Ball", Price = 4.99 },
@@ -33,25 +33,22 @@ namespace RfidCheckout.TagReader
             };
 
             // Display the order data.
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Order contains {0} items.", orderItems.Length);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-
-
-
+            ForegroundColor = ConsoleColor.Green;
+            WriteLine("Order contains {0} items.", orderItems.Length);
+            ForegroundColor = ConsoleColor.Yellow;
+            
             double orderTotal = 0.0;
             foreach (RfidTag tag in orderItems)
             {
-                Console.WriteLine("{0} - ${1}", tag.Product, tag.Price);
+                WriteLine("{0} - ${1}", tag.Product, tag.Price);
                 orderTotal += tag.Price;
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Order value = ${0}.", orderTotal);
-            Console.WriteLine();
-            Console.ResetColor();
-
-            Console.WriteLine("Press enter to scan...");
-            Console.ReadLine();
+            ForegroundColor = ConsoleColor.Green;
+            WriteLine("Order value = ${0}.", orderTotal);
+            WriteLine();
+            ResetColor();
+            WriteLine("Press enter to scan...");
+            ReadLine();
 
             Random random = new(DateTime.Now.Millisecond);
 
@@ -60,9 +57,9 @@ namespace RfidCheckout.TagReader
             int sentCount = 0;
             int position = 0;
 
-            Console.WriteLine("Reading tags...");
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            WriteLine("Reading tags...");
+            WriteLine();
+            ForegroundColor = ConsoleColor.Cyan;
 
             // Comment in to create session id
             //var sessionId = Guid.NewGuid().ToString();
@@ -84,7 +81,7 @@ namespace RfidCheckout.TagReader
 
                 // Send the message
                 await queueClient.SendAsync(tagReadMessage);
-                Console.WriteLine($"Sent: { orderItems[position].Product }");
+                WriteLine($"Sent: { orderItems[position].Product }");
                 //Console.WriteLine($"Sent: { orderItems[position].Product } - MessageId: { tagReadMessage.MessageId }");
 
                 // Randomly cause a duplicate message to be sent.
@@ -94,12 +91,12 @@ namespace RfidCheckout.TagReader
                 Thread.Sleep(100);
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("{0} total tag reads.", sentCount);
-            Console.WriteLine();
-            Console.ResetColor();
+            ForegroundColor = ConsoleColor.Green;
+            WriteLine("{0} total tag reads.", sentCount);
+            WriteLine();
+            ResetColor();
 
-            Console.ReadLine();
+            ReadLine();
 
         }
     }
