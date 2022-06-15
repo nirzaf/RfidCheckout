@@ -87,17 +87,14 @@ namespace RfidCheckout.TagReader
                 // Randomly cause a duplicate message to be sent.
                 if (random.NextDouble() > 0.4) position++;
                 sentCount++;
-
                 Thread.Sleep(100);
             }
 
             ForegroundColor = ConsoleColor.Green;
             WriteLine("{0} total tag reads.", sentCount);
             WriteLine();
-            ResetColor();
-
+            ResetColor(); 
             ReadLine();
-
         }
     }
 }
